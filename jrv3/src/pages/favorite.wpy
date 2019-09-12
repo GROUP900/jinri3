@@ -1,0 +1,180 @@
+<style lang='scss'>
+
+.favoritewrap {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 14rpx 16rpx 0 16rpx;
+    box-sizing: border-box;
+    &>view {
+        width: 33.33%;
+        padding-bottom: 178%;
+        padding: 0 16rpx;
+        margin-bottom: 32rpx;
+        box-sizing: border-box;
+        position: relative;
+        .aspect-ratio {
+            width: 100%;
+            height: 0;
+            position: relative;
+            padding-bottom: 177%;
+            image {
+                width: 100%;
+                border-radius: 6rpx;
+                overflow: hidden;
+                display: block;
+            }
+        }
+    }
+}
+
+</style>
+
+<template>
+
+<wprog hint="持续按住取消收藏" duration="1000" />
+
+<notice wx:if="{{notice}}" :mode.sync="noticeMode" />
+<view wx:else class="favoritewrap" @touchcancel='touchbreak' @touchmove='touchbreak' @touchstart='record' @tap='goto' @touchend='touchbreak' @longpress='showprog'>
+    <view wx:for="{{list}}" wx:key="{{item.id}}">
+        <view class='aspect-ratio'>
+            <image lazy-load data-date='{{item.date}}' data-id='{{item.id}}' src='{{item.fronturl}}' mode="widthFix"></image>
+        </view>
+    </view>
+</view>
+
+</template>
+
+<script>
+
+import wafer from '../wafer/wafer'
+import wepy from 'wepy';
+import wprog from '../components/wprog';
+import notice from '../components/notice';
+export default class extends wepy.page {
+    target = {
+      id:'',
+      valid:false
+    }
+    config = {
+        navigationBarTitleText: '收藏'
+    }
+
+    data = {
+        notice: false,
+        noticeMode: 'empty',
+        list: [],
+        done:false
+    }
+
+    methods = {
+        goto(ev) {
+                if (!ev.target.dataset.date) return
+                wx.navigateTo({
+                    url: 'randomday?day=' + ev.target.dataset.date
+                })
+            },
+            touchbreak() {
+                if(!this.target.valid) return
+                this.$invoke('wprog', 'cancel');
+                this.target.valid=false
+            },
+            record(ev) {
+                if(!ev.target.dataset.id)return
+                this.target = {
+                  id:ev.target.dataset.id,
+                  valid:true
+                }
+            },
+            showprog() {
+                if(!this.target.valid) return
+                this.$invoke('wprog', 'show');
+            }
+    }
+
+    components = {
+        wprog,
+        notice
+    }
+
+    events = {
+      agreed(){
+        this.notice = false
+        this.fetchData()
+      },
+        'confirm': async () => {
+          await wafer.request('collection?id='+this.target.id,'delete')
+          this.list.forEach((item,index)=>{
+            if(item.id==this.target.id){
+              this.list.splice(index, 1);
+            }
+          })
+          this.$apply()
+        }
+    }
+
+    async fetchData() {
+        let sourceurl = this.$parent.globalData.sourceurl
+        let result = await wafer.request('collections','post')
+        if(result=='empty'||!result[0]){
+          this.notice = true;
+          this.noticeMode = 'empty';
+          this.$apply()
+          return
+        }
+        result.forEach((item) => {
+            item.fronturl = sourceurl + item.fronturl
+        })
+        this.list = result
+        this.$apply()
+    }
+
+    async onReachBottom(){
+      if(this.done){
+        wx.showToast({
+          title: '你的收藏已经全部加载了',
+          icon: 'none',
+          duration: 2000
+        })
+        return
+      }
+      wx.showNavigationBarLoading()
+      let exclude = []
+      this.list.forEach((item)=>{
+        exclude.push(item.id.toString())
+      })
+      let result = await wafer.request('collections','post',{exclude})
+      let sourceurl = this.$parent.globalData.sourceurl
+      result.forEach((item) => {
+          item.fronturl = sourceurl + item.fronturl
+      })
+      this.list = this.list.concat(result)
+      if(result.length<18){
+        this.done = true
+      }
+      this.$apply()
+      wx.hideNavigationBarLoading()
+    }
+
+    async onShow() {
+        this.notice = false;
+        this.done = false
+        let {
+            authSetting: {
+                'scope.userInfo': scope
+            }
+        } = await wepy.getSetting()
+        if (!scope) {
+            await wepy.getUserInfo({
+                withCredentials: true
+            }).catch((err) => {
+                this.notice = true;
+                this.noticeMode = 'lock';
+                this.$apply()
+            })
+        } else {
+            this.fetchData()
+        }
+    }
+}
+
+</script>

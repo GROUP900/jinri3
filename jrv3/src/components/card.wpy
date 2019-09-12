@@ -1,0 +1,703 @@
+<style lang='scss'>
+
+.cardcontainer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient( #656565, #060606);
+    opacity: 0;
+    overflow:hidden;
+    .viewport {
+        transition: 2.4s;
+        overflow: hidden;
+        perspective: 1200px;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        &.loaded {
+            perspective: 400px;
+        }
+    }
+    .camera {
+        transform-style: preserve-3d;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    .stage {
+        top: 0;
+        left: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        view {
+            position: absolute;
+        }
+        .left {
+            left: 0;
+            top: 0;
+            width: 750rpx;
+            height: 100%;
+            transform: translateX(-50%) translateZ(-375rpx) rotateY(90deg);
+            background: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, .3), rgba(0, 0, 0, 0));
+        }
+        .right {
+            right: 0;
+            top: 0;
+            width: 750rpx;
+            height: 100%;
+            transform: translateX(50%) translateZ(-375rpx) rotateY(-90deg);
+            background: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, .3), rgba(0, 0, 0, 0));
+        }
+        .top {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 754rpx;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, .3), rgba(0, 0, 0, 0));
+            transform: translateY(-50%) translateZ(-375rpx) rotateX(-90deg);
+        }
+        .bottom {
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 750rpx;
+            background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, .3), rgba(0, 0, 0, 0));
+            transform: translateY(50%) translateZ(-375rpx) rotateX(90deg);
+        }
+    }
+}
+
+.hiddenlayer {
+    opacity: 0;
+    position: absolute;
+    z-index: 6000;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    .hint {
+        font-weight: 500;
+        position: absolute;
+        top: 48rpx;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 22rpx;
+        color: rgba(white, .3);
+    }
+    .content {
+        width: 90%;
+        &.random {
+            margin-top: -74rpx;
+        }
+        margin-top:-40rpx;
+        text-align:center;
+        position: absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%, -50%);
+        color:white;
+        font-weight:500;
+        font-size:32rpx;
+        line-height: 68rpx;
+        letter-spacing: 18rpx;
+    }
+    .buttons {
+        &.random {
+            bottom: 194rpx;
+        }
+        position:absolute;
+        left:50%;
+        transform:translateX(-50%);
+        bottom:120rpx;
+        width:480rpx;
+        display: flex;
+        justify-content: space-between;
+        color:white;
+        font-size:22rpx;
+        view {
+            &.disable {
+                opacity: .5;
+            }
+            image {
+                margin-bottom: 10rpx;
+                width: 54rpx;
+                height: 54rpx;
+            }
+            width:96rpx;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+}
+
+.fadeanimationwrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 5000;
+}
+
+.pager {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32rpx;
+    color: white;
+    z-index: 4000;
+    font-size: 28rpx;
+    box-sizing: border-box;
+    font-weight: 500;
+    .left,
+    .right {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        transition: .2s;
+        opacity: 0;
+        &.active {
+            opacity: 1
+        }
+    }
+    .left {
+        .arrow {
+            margin-right: 16rpx;
+        }
+    }
+    .right {
+        .arrow {
+            transform: rotateY(180deg);
+            margin-left: 16rpx;
+        }
+    }
+    .arrow {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgOWwxOC05djE4eiIgZmlsbD0iI0ZGRiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+);
+        width: 18rpx;
+        height: 18rpx;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    .date {
+        display: block;
+        font-size: 22rpx;
+    }
+}
+
+.card {
+    height: 100%;
+    width: 150%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .movable-wrap {
+        &.random {
+            margin-top: -74rpx;
+        }
+        height: 960rpx;
+        width: 540rpx;
+        position: relative;
+    }
+    .image {
+        perspective: 1200px;
+        opacity: 0;
+        transform: translateY(-40rpx);
+        position: relative;
+        height: 100%;
+        width: 100%;
+        .front {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -moz-backface-visibility: hidden;
+            z-index: 1;
+        }
+        .back {
+            image {
+                transform: rotateY(-180deg);
+            }
+        }
+        view {
+            top: 0;
+            left: 0;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            transition: 1.2s;
+            box-shadow: 1rpx 2rpx 4rpx rgba(0, 0, 0, .12);
+            &.backface {
+                transform: rotateY(180deg);
+            }
+        }
+        image {
+            border-radius: 5rpx;
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+
+</style>
+
+<template>
+
+<wprog hint="持续按住下载图片" duration="1500" />
+
+<view class="hiddenlayer" hidden="{{!hiddenlayer}}" animation="{{hiddenlayerAnimation}}" @tap='backtomain'>
+    <text class="hint">点击空白处退出</text>
+    <rich-text :class="{'random':randommode}" nodes="{{poem}}" class='content'></rich-text>
+    <view class="buttons" :class="{'random':randommode}">
+        <view @tap.stop='toggleCollection'>
+            <image wx:if="{{!collected}}" src='../assets/de_staricon.png'></image>
+            <image wx:else src='../assets/staricon.png'></image>
+            <text wx:if="{{!collected}}">收藏</text>
+            <text wx:else>取消收藏</text>
+        </view>
+        <view :class="{'disable':!resourceid}" @tap.stop='getResource'>
+            <image src='../assets/discovericon.png'></image>
+            <text>探索</text>
+        </view>
+        <view @tap.stop='like'>
+            <image wx:if="{{!likecount}}" src='../assets/de_likeicon.png'></image>
+            <image wx:else src='../assets/likeicon.png'></image>
+            <text wx:if="{{!likecount}}">喜欢</text>
+            <text wx:else>{{likecount}}</text>
+        </view>
+    </view>
+</view>
+<view class="cardcontainer" animation="{{initAnimation}}">
+    <view class="fadeanimationwrap" animation="{{cardfadedAnimation}}">
+        <movable-area class="card">
+            <movable-view x='{{x}}' direction='horizontal' friction='{{movableSetting.friction}}' out-of-bounds='{{movableSetting.check}}' inertia='{{movableSetting.check}}' :class="{'random':randommode}" class="movable-wrap">
+                <view class="image" @touchcancel='touchbreak' @touchmove='moving' @touchstart='record' @tap='toggleFace' @touchend='leave' @longpress='showprog' animation="{{cardLoadedAnimation}}">
+                    <view class="front" :class="{'backface':backface}">
+                        <image @load="imageLoaded('front')" src="{{image.fronturl}}"></image>
+                    </view>
+                    <view class="back" :class="{'backface':backface}">
+                        <image @load="imageLoaded('back')" src="{{image.backurl}}"></image>
+                    </view>
+                </view>
+            </movable-view>
+        </movable-area>
+    </view>
+    <view class="pager">
+        <view wx:if="{{prevdate}}" class="left" :class="{'active':cardPos=='l'}">
+            <view class="arrow">
+            </view>
+            <view>
+                <text>昨日</text>
+                <text class="date">{{prevdate}}</text>
+            </view>
+        </view>
+        <view wx:else class="left" :class="{'active':cardPos=='l'}">
+            look forward
+        </view>
+        <view wx:if="{{nextdate}}" class="right" :class="{'active':cardPos=='r'}">
+            <view>
+                <text>某日</text>
+                <text class="date">{{nextdate}}</text>
+            </view>
+            <view class="arrow">
+            </view>
+        </view>
+        <view wx:else class="right" :class="{'active':cardPos=='r'}">
+            see you soon…
+        </view>
+    </view>
+    <view class="viewport" :class="{'loaded':loaded}">
+        <view class="camera" animation="{{cameramove}}">
+            <view class="stage">
+                <view class="left"></view>
+                <view class="right"></view>
+                <view class="top"></view>
+                <view class="bottom"></view>
+            </view>
+        </view>
+    </view>
+</view>
+
+</template>
+
+<script>
+
+import wepy from 'wepy';
+import wprog from './wprog';
+import wafer from '../wafer/wafer'
+export default class extends wepy.component {
+    data = {
+        backface: false,
+        cardrotateAnimation: {},
+        cardLoadedAnimation: {},
+        cardfadedAnimation: {},
+        initAnimation: {},
+        cameramove: {},
+        hiddenlayerAnimation: {},
+        loaded: false,
+        movableSetting: {
+            check: true,
+            friction: 50
+        },
+        x: 0,
+        cardPos: 'm',
+        randommode: false,
+        hiddenlayer: false,
+        image: {
+            fronturl: '',
+            backurl: '',
+            frontstatu: false,
+            backstatu: false
+        },
+        poem: '',
+        nextdate: null,
+        prevdate: null,
+        resourceid: '',
+        likecount: '',
+        id: '',
+        sharecount: '...',
+        collected: false
+    }
+
+    start = {
+        x: 0,
+        y: 0
+    }
+
+    methods = {
+        async toggleCollection() {
+                if (this.collected) {
+                    await wafer.request('collection?id=' + this.id, 'delete')
+                    this.collected = false
+                    this.$apply()
+                } else {
+                    try {
+                        await wafer.request('collection?id=' + this.id, 'put')
+                        this.collected = true
+                        this.$apply()
+                    } catch (e) {
+                        console.log(e)
+                        wx.showModal({
+                            title: '失败',
+                            content: "我们你的授权来帮助保存收藏信息，请尝试到'碎碎念'或'收藏'标签中进行授权",
+                            showCancel: false,
+                            confirmText: '知道了'
+                        })
+                    }
+                }
+            },
+            getResource() {
+                if (!this.resourceid) {
+                    wx.showToast({
+                        title: '这张日签没有探索附件',
+                        icon: 'none',
+                        duration: 2000
+                    })
+                    return
+                }
+                wx.navigateTo({
+                    url: 'discover?id=' + this.resourceid
+                })
+            },
+            like() {
+                if (this.likecount) return
+                wepy.request({
+                    url: 'common/riqian/like?id=' + this.id,
+                    method: 'put'
+                }).then(({
+                    data: {
+                        likecount
+                    }
+                }) => {
+                    this.likecount = likecount
+                })
+            },
+            imageLoaded(face) {
+                if (face == 'front') {
+                    this.image.frontstatu = true
+                } else {
+                    this.image.backstatu = true
+                }
+            },
+
+            leave(ev) {
+                if (!this.loaded) {
+                    return
+                }
+                this.$invoke('wprog', 'cancel');
+                let offsetX = ev.changedTouches[0].clientX - this.start.x;
+                let offsetY = this.start.y - ev.changedTouches[0].clientY;
+                let reset = () => {
+                    this.$data.x = 1;
+                    this.x = 0;
+                    this.cardPos = 'm'
+                }
+                if (Math.abs(offsetX) > Math.abs(offsetY)) {
+                    switch (true) {
+                        case offsetX > 100:
+                            if (!this.prevdate) {
+                                reset()
+                                return
+                            }
+                            this.cardfadedAnimation = wx.createAnimation({
+                                duration: 600
+                            }).opacity(0).translateX('500px').step().export();
+                            this.initAnimation = wx.createAnimation({
+                                timingFunction: 'ease-in',
+                                delay: 200,
+                                duration: 400
+                            }).opacity(0).step().export()
+
+                            setTimeout(() => {
+                                wx.redirectTo({
+                                    url: 'randomday?day=' + this.prevdate
+                                })
+                            }, 700)
+                            break;
+                        case offsetX < -100:
+                            if (!this.nextdate) {
+                                reset()
+                                return
+                            }
+                            this.cardfadedAnimation = wx.createAnimation({
+                                duration: 600
+                            }).opacity(0).translateX('-500px').step().export();
+                            this.initAnimation = wx.createAnimation({
+                                timingFunction: 'ease-in',
+                                delay: 200,
+                                duration: 400
+                            }).opacity(0).step().export()
+                            setTimeout(() => {
+                                wx.redirectTo({
+                                    url: 'randomday?day=' + this.nextdate
+                                })
+                            }, 700)
+                            break;
+                        default:
+                            reset()
+                            break;
+                    }
+                } else if (offsetY > 80) {
+                    this.$data.x = 1;
+                    this.x = 0;
+                    this.cardPos = 'm'
+                    this.hiddenlayer = true
+                    this.cameramove = wx.createAnimation({
+                        timingFunction: 'ease-out',
+                        duration: 2000
+                    }).translateZ('230px').rotateX(30).step().export()
+                    this.cardLoadedAnimation = wx.createAnimation({
+                        duration: 350
+                    }).opacity(0).translateY('-20px').step().export()
+                    setTimeout(() => {
+                        this.hiddenlayerAnimation = wx.createAnimation({
+                            duration: 500
+                        }).opacity(1).step().export()
+                        this.$apply();
+                    }, 450)
+                }
+            },
+            backtomain() {
+                this.hiddenlayerAnimation = wx.createAnimation({
+                    duration: 200
+                }).opacity(0).step().export()
+                this.cameramove = wx.createAnimation({
+                    timingFunction: 'ease-out',
+                    duration: 1600
+                }).translateZ(0).rotateX(0).step().export()
+                this.cardLoadedAnimation = wx.createAnimation({
+                    delay: 1000,
+                    duration: 350
+                }).opacity(1).translateY(0).step().export()
+                setTimeout(() => {
+                    this.hiddenlayer = false
+                    this.$apply();
+                }, 320)
+            },
+            moving(ev) {
+                this.$invoke('wprog', 'cancel');
+                let offset = ev.touches[0].clientX - this.start.x;
+                let result = ''
+                switch (true) {
+                    case offset > 100:
+                        result = 'l';
+                        break;
+                    case offset < -100:
+                        result = 'r';
+                        break;
+                    default:
+                        result = 'm';
+                        break;
+                }
+                if (this.cardPos != result) {
+                    this.cardPos = result
+                }
+            },
+            showprog() {
+                this.$invoke('wprog', 'show');
+            },
+            toggleFace() {
+                this.backface = !this.backface
+            },
+            record(ev) {
+                this.start = {
+                    x: ev.touches[0].clientX,
+                    y: ev.touches[0].clientY
+                }
+            },
+            touchbreak() {
+                this.$data.x = 1;
+                this.x = 0;
+                this.cardPos = 'm'
+                this.$invoke('wprog', 'cancel');
+            }
+    }
+
+    events = {
+        'confirm': async() => {
+            let url;
+            if (this.backface) {
+                url = this.image.backurl
+            } else {
+                url = this.image.fronturl
+            }
+            wepy.downloadFile({
+                url
+            }).then((res) => {
+                wepy.saveImageToPhotosAlbum({
+                    filePath: res.tempFilePath
+                }).then(() => {
+                    wx.showModal({
+                        title: '提示',
+                        content: '保存到相册了，发给朋友看吧',
+                        confirmText: '知道了',
+                        showCancel: false
+                    })
+                }).catch((err) => {
+                    console.log(err)
+                    wepy.showModal({
+                        title: '提示',
+                        content: '没有保存图片的权限..点击确定去设置',
+                        confirmText: '确定',
+                        showCancel: true
+                    }).then((confirm) => {
+                        if (confirm) {
+                            wx.openSetting()
+                        }
+                    })
+                })
+            })
+        }
+    }
+
+    components = {
+        'wprog': wprog
+    };
+
+    dispDate(d) {
+        return d.slice(2).replace(/-/g, '/')
+    }
+
+    props = {
+        id: {
+            type: String,
+            twoWay: true
+        },
+        shareCount: {
+            type: String,
+            twoWay: true
+        },
+        curDate: {
+            type: String,
+            twoWay: true
+        },
+        fronturl: {
+            type: String,
+            twoWay: true
+        }
+    }
+
+    async boot() {
+        if (this.$wxpage.route == 'pages/randomday') {
+            this.randommode = true
+        }
+        this.$apply();
+        wx.showNavigationBarLoading()
+        let url;
+        if (!this.randommode) {
+            url = 'common/riqian/latest'
+        } else {
+            url = 'common/riqian/random?day=' + this.$wxpage.options.day
+        }
+        await wepy.request(url).then(({
+            data
+        }) => {
+            let sourceurl = this.$parent.$parent.globalData.sourceurl
+            this.id = data.id
+            this.image.fronturl = sourceurl + data.fronturl
+            this.fronturl = sourceurl + data.fronturl
+            this.image.backurl = sourceurl + data.backurl
+            this.poem = data.content.replace(/\n/g, "<br />")
+            this.nextdate = (data.nextdate) ? this.dispDate(data.nextdate) : null
+            this.prevdate = (data.prevdate) ? this.dispDate(data.prevdate) : null
+            this.resourceid = data.resourceid
+            this.shareCount = data.sharecount
+            this.curDate = this.dispDate(data.curdate)
+            this.$apply();
+        })
+        this.initAnimation = wx.createAnimation({
+            timingFunction: 'ease-in',
+            delay: 100,
+            duration: 1200,
+            opacity: 0
+        }).opacity(1).step().export()
+        await new Promise((rs, rj) => {
+            let ot = setTimeout(() => {
+                    clearInterval(repeat)
+                    wx.showToast({
+                        title: '资源加载超时',
+                        icon: 'none',
+                        duration: 2000
+                    })
+                    this.loaded = true;
+                    this.$apply();
+                    wx.hideNavigationBarLoading()
+                    rj()
+                }, 15000)
+                //如果15秒都没读完图片说明读不出来了，直接rj
+            let repeat = setInterval(() => {
+                    if (this.image.frontstatu && this.image.backstatu) {
+                        rs()
+                        this.$apply();
+                        clearTimeout(ot)
+                        clearInterval(repeat)
+                    }
+                }, 10)
+                //每隔10秒检查一次图片是否加载了，因为我们没法访问DOM，所以说不可能把小程序事件包装成Promise
+        })
+        this.loaded = true;
+        this.$apply();
+        this.cardLoadedAnimation = wx.createAnimation({
+            timingFunction: 'ease-out',
+            delay: 1600,
+            duration: 800
+        }).opacity(1).translateY('0').step().export()
+        this.$apply();
+        wx.hideNavigationBarLoading()
+        let {
+            result: collected
+        } = await wafer.request('collection?id=' + this.id, 'get')
+        this.collected = collected
+        this.$apply();
+    }
+}
+
+</script>

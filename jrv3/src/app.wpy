@@ -1,0 +1,170 @@
+<style lang="scss">
+
+page {
+    background: black;
+}
+
+.group {
+    margin-bottom: 32rpx;
+    width: 100%;
+    border-top: solid 1rpx rgba(white, .12);
+    .desc {
+        font-size: 34rpx;
+        color: white;
+    }
+    .arrow {
+        width: 16rpx;
+        height: 26rpx;
+        background-size: contain;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMjYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE2IDEzLjAzM0wzLjMyIDI2IC4zODggMjIuODY4bDkuNzQ1LTkuOTY2TDAgMy4xOTggMy4xMjcgMHoiIGZpbGw9IiNDN0M3Q0MiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvc3ZnPg==);
+    }
+    .content {
+        color: #888888;
+        font-size: 28rpx;
+    }
+    .item {
+        width: 100%;
+        height: 88rpx;
+        background: rgba(#353535, .35);
+        border-bottom: solid 1rpx rgba(white, .12);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 32rpx;
+        box-sizing: border-box;
+    }
+    .wrap {
+        margin: 32rpx 0 32rpx 0;
+    }
+}
+
+switch {
+    transform: scale(.9);
+    transform-origin: center right;
+}
+
+textarea {
+    width: 100%;
+    height: 176rpx;
+    background: rgba(#353535, .35);
+    color: white;
+    border-top: solid 1rpx rgba(white, .12);
+    border-bottom: solid 1rpx rgba(white, .12);
+    padding: 20rpx 32rpx;
+    box-sizing: border-box;
+    font-size: 28rpx;
+}
+
+</style>
+
+
+
+<script>
+
+import wepy from 'wepy'
+import Promise from 'promise-polyfill';
+import 'wepy-async-function'
+export default class extends wepy.app {
+    globalData = {
+      //cdn 换成你自己的
+        sourceurl: 'https://xxx.myqcloud.com/'
+    }
+    config = {
+        pages: [
+            'pages/index',
+            'pages/ssn',
+            'pages/imgpush',
+            'pages/push',
+            'pages/my',
+            'pages/favorite',
+            'pages/randomday',
+            'pages/feedback',
+            'pages/about',
+            'pages/tutorial',
+            'pages/discover',
+            'pages/changelog'
+        ],
+        window: {
+            navigationBarTitleText: '今日',
+            navigationBarBackgroundColor: '#000000',
+            backgroundColor: '#000000',
+            backgroundTextStyle: 'light'
+        },
+        networkTimeout: {
+            "request": 80000,
+            "downloadFile": 16000
+        },
+        tabBar: {
+            backgroundColor: '#000000',
+            selectedColor: '#ffffff',
+            color: '#666666',
+            list: [{
+                pagePath: "pages/index",
+                text: "今日",
+                iconPath: 'assets/icon1.jpg',
+                selectedIconPath: 'assets/icon1_hover.jpg'
+            }, {
+                pagePath: "pages/ssn",
+                text: "碎碎念",
+                iconPath: 'assets/icon2.jpg',
+                selectedIconPath: 'assets/icon2_hover.jpg'
+            },{
+                pagePath: "pages/favorite",
+                text: "收藏",
+                iconPath: 'assets/icon3.jpg',
+                selectedIconPath: 'assets/icon3_hover.jpg'
+            }, {
+                pagePath: "pages/my",
+                text: "我的",
+                iconPath: 'assets/icon4.jpg',
+                selectedIconPath: 'assets/icon4_hover.jpg'
+            }]
+        }
+    }
+
+    constructor() {
+        super()
+        this.use('promisify');
+        this.use('requestfix');
+        this.intercept('request', {
+            config(p) {
+                if(typeof p == 'string'){
+                  p = 'https://api.jr.nine00.com/v3/'+p
+                }else{
+                  p.url = 'https://api.jr.nine00.com/v3/'+p.url
+                }
+                return p;
+            },
+            // config(p) {
+            //     if (typeof p == 'string') {
+            //         p = 'http://10.10.10.170:4041/v3/' + p
+            //     } else {
+            //         p.url = 'http://10.10.10.170:4041/v3/' + p.url
+            //     }
+            //     return p;
+            // },
+            fail (p) {
+                console.log('request fail: ', p);
+                wx.showToast({
+                  icon:'none',
+                  duration:2000,
+                  title:'数据请求失败'
+                })
+                return p;
+            }
+        })
+        this.intercept('uploadFile', {
+            // config(p) {
+            //     p.url = 'http://10.10.10.170:4041/v3/' + p.url
+            //     return p;
+            // }
+            config(p) {
+                p.url = 'https://api.jr.nine00.com/v3/' + p.url
+                return p;
+            }
+        })
+    }
+
+}
+
+</script>

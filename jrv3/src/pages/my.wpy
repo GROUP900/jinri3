@@ -1,0 +1,104 @@
+<template>
+<view class="wrap">
+  <text class="label">碎碎念</text>
+  <view class="group">
+    <view class="item">
+      <text class="desc">保持不用我说的话做今日文案</text>
+      <switch checked='{{noCopy}}' @change='toggleCopy'/>
+    </view>
+    <view class="item">
+      <text class="desc">保持不显示我的昵称和头像</text>
+      <switch checked='{{anonymous}}' @change='toggleAnonymous'/>
+    </view>
+  </view>
+  <text class="label">关于</text>
+  <view class="group">
+    <navigator url='tutorial' class="item">
+      <text class="desc">操作方式</text>
+      <view class="arrow"></view>
+    </navigator>
+    <navigator url='about' class="item">
+      <text class="desc">关于TODAY·今日</text>
+      <view class="arrow"></view>
+    </navigator>
+  </view>
+  <text class="label">其他</text>
+  <view class="group">
+    <navigator url='feedback' class="item">
+      <text class="desc">报告错误和建议</text>
+      <view class="arrow"></view>
+    </navigator>
+    <view class="item" @tap='auth'>
+      <text class="desc">小程序授权</text>
+      <view class="arrow"></view>
+    </view>
+  </view>
+  <!-- <view class="group">
+    <view class="item">
+      <text class="desc">今日壁纸小程序</text>
+      <view class="arrow"></view>
+    </view>
+  </view> -->
+  <view class="group">
+    <navigator url='changelog' class="item">
+      <text class="desc">更新记录</text>
+      <view class="arrow"></view>
+    </navigator>
+    <view class="item">
+      <text class="desc">内容投稿</text>
+      <text class="content">jr.nine00.com/contribute</text>
+    </view>
+  </view>
+</view>
+</template>
+
+<style lang='scss'>
+.label {
+  color:#888888;
+  margin:0 0 15rpx 32rpx;
+  font-size:28rpx;
+  display:block;
+}
+</style>
+
+<script>
+
+import wepy from 'wepy';
+export default class extends wepy.page {
+
+    config = {
+      navigationBarTitleText:'我的'
+    }
+
+    data = {
+      noCopy:false,
+      anonymous:false
+    }
+
+    methods = {
+      auth(){
+        wx.openSetting()
+      },
+      toggleAnonymous(ev){
+        if(ev.detail.value){
+          wx.setStorageSync('anonymous',true)
+        }else{
+          wx.setStorageSync('anonymous',false)
+        }
+      },
+      toggleCopy(ev){
+        if(ev.detail.value){
+          wx.setStorageSync('noCopy',true)
+        }else{
+          wx.setStorageSync('noCopy',false)
+        }
+      }
+    }
+
+    onLoad(){
+      this.noCopy = wx.getStorageSync('noCopy')
+      this.anonymous = wx.getStorageSync('anonymous')
+    }
+}
+
+</script>

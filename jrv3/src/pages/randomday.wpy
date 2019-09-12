@@ -1,0 +1,113 @@
+<template>
+  <card :id='id' :fronturl='fronturl' :shareCount='shareCount' :curDate='curDate'/>
+  <view class="control">
+    <text class="status">{{curDate}} 的日签，被转发 {{shareCount}} 次</text>
+    <view class="buttons">
+      <button class='share' open-type='share'></button>
+      <view class="back" @tap='back'>回到今日</view>
+    </view>
+  </view>
+</template>
+
+<style lang='scss'>
+.control {
+  z-index:9999;
+  width: 100%;
+  position: absolute;
+  bottom:36rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding:0 32rpx;
+  .status{
+    font-size:22rpx;
+    color:rgba(white,.75);
+  }
+  .buttons{
+    display: flex;
+    align-items: center;
+    .share{
+      background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTgiIGhlaWdodD0iNTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTI5IDU4QzEyLjk4NCA1OCAwIDQ1LjAxNiAwIDI5UzEyLjk4NCAwIDI5IDBzMjkgMTIuOTg0IDI5IDI5LTEyLjk4NCAyOS0yOSAyOXptMTEuODQyLTMzLjc5OGgtNS42NDFjLS43MzMgMC0xLjMzMy41ODctMS4zMzMgMS4zMDVzLjYgMS4zMDUgMS4zMzMgMS4zMDVoNC4yODZ2MTUuNDQ1SDE3LjcyMlYyNi44MTJoNC43M2MuNzM0IDAgMS4zMzMtLjU4NyAxLjMzMy0xLjMwNXMtLjYtMS4zMDUtMS4zMzItMS4zMDVoLTYuMDg2Yy0uNzMzIDAtMS4zMS42NTItMS4zMSAxLjM3VjQzLjY3YzAgLjcxOC41NzcgMS4xOTcgMS4zMSAxLjE5N2gyNC40NzVjLjczMyAwIDEuMzEtLjQ3OSAxLjMxLTEuMTk3VjI1LjU3MmMwLS43MTgtLjU3Ny0xLjM3LTEuMzEtMS4zN3ptLTEyLjQ2IDkuNzg4Yy43MzQgMCAxLjMzMy0uNTg3IDEuMzMzLTEuMzA1VjE1bDUuNjg2IDQuOTZjLjI0NC4yMTcuNTc3LjMyNi44ODguMzI2LjM3OCAwIC43MzMtLjE1MiAxLS40MzVhMS4yOSAxLjI5IDAgMCAwLS4xMTItMS44NDlsLTcuNjYyLTYuNjc4YTEuMzYzIDEuMzYzIDAgMCAwLTEuNzEtLjA0MyAxLjMzMSAxLjMzMSAwIDAgMC0uNTc3LjUyMmwtNi42NDEgNi4yNDNhMS4yODggMS4yODggMCAwIDAtLjA0NCAxLjg0OWMuNTEuNTIyIDEuMzU0LjU0MyAxLjg4Ny4wNDNsNC42Mi00LjM1djE3LjA5N2MwIC43MTguNiAxLjMwNSAxLjMzMyAxLjMwNXoiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbD0iI0ZGRiIvPjwvc3ZnPg==);
+      width:58rpx;
+      height:58rpx;
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity:.55;
+      margin-right:20rpx;
+      display:block;
+      background-color: rgba(255,255,255,0);
+      &:after{
+        width:0;
+        height:0;
+        top:0;
+        left:0
+      }
+    }
+    .back{
+      height:58rpx;
+      padding:0 30rpx;
+      background:rgba(white,.55);
+      border-radius:100px;
+      line-height:58rpx;
+      font-size:22rpx;
+      color:rgba(black,.75)
+    }
+  }
+}
+</style>
+
+<script>
+
+import wepy from 'wepy';
+import card from '../components/card';
+export default class extends wepy.page {
+
+    config = {
+        disableScroll: true
+    }
+
+    data = {
+      id:'',
+      shareCount:'...',
+      curDate:'...',
+      fronturl:''
+    }
+
+    methods = {
+      back(){
+        wx.reLaunch({
+          url:'index'
+        })
+      }
+    }
+
+    components = {
+        card
+    }
+
+    onShareAppMessage(){
+      return {
+        title: '今日 '+this.curDate,
+        path:'/pages/randomday?day='+this.curDate,
+        imageUrl:this.fronturl,
+        success:()=>{
+          if(this.id){
+            wepy.request({
+              url:'common/riqian/share?id='+this.id,
+              method:'put'
+            }).then(({data:{sharecount}})=>{
+              this.shareCount = sharecount
+              this.$apply()
+            })
+          }
+        }
+      }
+    }
+
+    onReady(){
+      this.$invoke('card','boot')
+    }
+}
+
+</script>

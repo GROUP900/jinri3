@@ -1,0 +1,80 @@
+<template>
+<view class="wrap">
+  <image class='logo' src='https://jinri-1253542371.file.myqcloud.com/static/shininglogo.jpg'></image>
+  <text class='title'>关于今日/使用须知</text>
+  <rich-text class='content' nodes='{{content}}'>
+  </rich-text>
+  <text class="copy">JINRI LITE</text>
+  <text class="copy">a mini program by Group900 made with ❤️</text>
+</view>
+</template>
+
+<style lang='scss'>
+.wrap {
+  color:white;
+  padding:32rpx 50rpx;
+  image,text,rich-text{display:block;}
+  .title{
+    font-weight:500;
+    font-size:40rpx;
+    margin-bottom:20rpx;
+  }
+  .logo{
+    margin:0 auto;
+    margin-bottom:32rpx;
+    width:400rpx;
+    height:336rpx;
+  }
+  .content {
+    font-size:20rpx;
+    line-height: 38rpx;
+    margin-bottom:32rpx;
+  }
+  .copy {
+    font-size:20rpx;
+    color:rgba(white,.75);
+  }
+}
+</style>
+
+<script>
+
+import wepy from 'wepy';
+export default class extends wepy.page {
+
+    config = {
+      navigationBarTitleText:'关于'
+    }
+
+    data = {
+      content:`
+      今日·TODAY（以下简称今日）每天发布一张日签<br>
+      内容以手机摄影作品和诗歌为主<br>
+      <br>
+      今日是个人项目，我们没有也不需要外部公司机构支持<br>
+      如果你希望支持今日的运作，请关注我们的微信公众号（在最底下）<br>
+      <br>
+      今日项目由手机摄影和诗歌爱好者大Z和三线数码艺术家中Z共同维护<br>
+      我们接受平面设计、UI设计、小程序/网站开发的雇佣需求，请敲公众号<br>
+      <br>
+      今日使用的日签主图为大Z拍摄，你可以转载到任何平台<br>
+      如果希望作为商业使用，请联系我们购买原图。侵权必究<br>
+      <br>
+      我们有可能会使用你发布的碎碎念作为日签的文案<br>
+      为了避免纠纷，你可以在‘我的’或发布时设置不授权给我们<br>
+      一旦发布后的相关问题恕不受理<br>
+      <br>
+      微信公众号：有文艺/900指南
+      `
+    }
+
+    methods = {
+
+    }
+
+    onLoad(){
+
+    }
+}
+
+</script>

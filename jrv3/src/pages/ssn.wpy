@@ -1,0 +1,553 @@
+<style lang='scss'>
+
+@keyframes zoom {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+page {
+    height: 100%;
+}
+
+.list {
+    margin-top: 96rpx;
+    background: #282827;
+    padding-bottom: 150rpx;
+    min-height: 100%;
+}
+
+.item {
+    margin-bottom: 10rpx;
+    background: #191919;
+    box-sizing: border-box;
+    padding: 32rpx;
+    color: white;
+    .content {
+        font-weight: 500;
+        letter-spacing: 0.5rpx;
+        font-size: 34rpx;
+    }
+    .control {
+        margin-top: 20rpx;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .happybutton {
+            opacity: 0.5;
+            &.active {
+                opacity: 1;
+            }
+            display: flex;
+            align-items: center;
+            view {
+                background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDIiIGhlaWdodD0iNDIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTIxIDBDOS40MjEgMCAwIDkuNDIxIDAgMjFzOS40MjEgMjEgMjEgMjEgMjEtOS40MjEgMjEtMjFTMzIuNTc5IDAgMjEgMHptMy4xNSAxNC43bDUuMjUtMy45MzhhMS4zMTIgMS4zMTIgMCAxIDEgMS41NzIgMi4xbC0zLjg0OCAyLjg4OCAzLjg1MSAyLjg4N2MuNTguNDM2LjY5OCAxLjI1OC4yNjUgMS44MzhhMS4zMiAxLjMyIDAgMCAxLTEuODQuMjYyTDI0LjE1IDE2LjhhMS4zMTIgMS4zMTIgMCAwIDEgMC0yLjF6bS0xMy4xMjUtMS44MzdhMS4zMTIgMS4zMTIgMCAxIDEgMS41NzUtMi4xbDUuMjUgMy45MzdhMS4zMTIgMS4zMTIgMCAwIDEgMCAyLjFsLTUuMjUgMy45MzhhMS4zMTQgMS4zMTQgMCAwIDEtMS44MzgtLjI2MyAxLjMxMiAxLjMxMiAwIDAgMSAuMjYzLTEuODM4bDMuODUtMi44ODctMy44NS0yLjg4N3pNMjEgMzYuNzVjLTcuMDIyIDAtMTMuMjUxLTQuNzEyLTE1LjE0OS0xMS40NTZhMS4zMDYgMS4zMDYgMCAwIDEgLjIxOC0xLjE1Yy4yNDctLjMyNy42MzMtLjUxOSAxLjA0NS0uNTE5aDI3Ljc3MmMuNDEgMCAuNzk4LjE5MiAxLjA0NS41Mi4yNDcuMzI4LjMyOC43NS4yMTggMS4xNUMzNC4yNSAzMi4wMzggMjguMDIyIDM2Ljc1IDIxIDM2Ljc1eiIgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsPSIjRkZGIi8+PC9zdmc+");
+                width: 42rpx;
+                height: 42rpx;
+                background-size: contain;
+                background-repeat: no-repeat;
+                margin-right: 20rpx;
+            }
+            text {
+                font-size: 22rpx;
+            }
+        }
+        .right {
+            display: flex;
+            align-items: center;
+        }
+        .heart {
+            margin-left: 32rpx;
+            display: flex;
+            align-items: center;
+            text {
+                margin-left: 20rpx;
+                font-weight: 500;
+                color: #E64340;
+                font-size: 22rpx;
+                display: none;
+            }
+            view {
+                height: 38rpx;
+                width: 42rpx;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDYiIGhlaWdodD0iNDIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTIyLjk5OSAzOS4wOTdjLTQwLjk2OS0yMi4wNTgtMTEuMzM5LTQ5LjQ4MiAwLTMxLjAxMyAxMS4zNC0xOC40NjkgNDAuOTcyIDguOTU1IDAgMzEuMDEzeiIgc3Ryb2tlPSIjRkZGIiBzdHJva2Utd2lkdGg9IjQiIGZpbGwtcnVsZT0ibm9uemVybyIgZmlsbD0ibm9uZSIgc3Ryb2tlLW9wYWNpdHk9Ii41Ii8+PC9zdmc+");
+            }
+            &.active {
+                view {
+                    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDIiIGhlaWdodD0iMzgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTIwLjk5OSAzNy4wOTdjLTQwLjk2OS0yMi4wNTgtMTEuMzM5LTQ5LjQ4MiAwLTMxLjAxMyAxMS4zNC0xOC40NjkgNDAuOTcyIDguOTU1IDAgMzEuMDEzeiIgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsPSIjRTY0MzQwIi8+PC9zdmc+");
+                }
+                text {
+                    display: inline-block;
+                }
+            }
+        }
+        .userinfo {
+            display: flex;
+            align-items: center;
+            image {
+                height: 48rpx;
+                width: 48rpx;
+                margin-right: 20rpx;
+            }
+            text {
+                font-size: 22rpx;
+            }
+        }
+    }
+}
+
+.state {
+    color: rgba(white, .5);
+    font-size: 22rpx;
+    line-height: 35rpx;
+    background: #191919;
+    box-sizing: border-box;
+    padding: 32rpx 93rpx 32rpx 32rpx;
+    margin-bottom: 10rpx;
+    position: relative;
+    .close {
+        width: 30rpx;
+        height: 30rpx;
+        position: absolute;
+        right: 32rpx;
+        top: 32rpx;
+    }
+}
+
+.tabs {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background: black;
+    height: 96rpx;
+    box-sizing: border-box;
+    padding: 0 110rpx;
+    z-index: 9999;
+    .tab {
+        width: 33.33%;
+        font-weight: 500;
+        font-size: 34rpx;
+        color: white;
+        text-align: center;
+        line-height: 96rpx;
+        height: 96rpx;
+        position: relative;
+        padding: 0 10rpx;
+        box-sizing: border-box;
+        &.active {
+            view {
+                height: 6rpx;
+                width: 100%;
+                background: white;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
+        }
+    }
+}
+
+.bottom {
+    height: 150rpx;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    position: fixed;
+    bottom: -150rpx;
+    left: 0;
+    z-index: 9999;
+    transition: .2s;
+    &.active {
+        bottom: 0;
+    }
+    .btn {
+        &:hover {
+            opacity: 0.8;
+        }
+        &.camera {
+            animation: zoom .2s;
+        }
+        .emoji {
+            font-size: 54rpx;
+        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 88rpx;
+        width: 240rpx;
+        background: #E64340;
+        border-radius: 1000px;
+        font-size: 34rpx;
+        font-weight: 500;
+    }
+}
+
+.image {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 40rpx 20rpx 40rpx;
+    position: relative;
+}
+
+.image-inner {
+    height: 0;
+    overflow: hidden;
+    position: relative;
+    padding-bottom: 100%;
+    width: 100%;
+    image {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+}
+
+</style>
+
+<template>
+
+<notice wx:if="{{notice}}" :mode.sync="noticeMode" />
+
+
+
+<view class="tabs" wx:if="{{!notice}}">
+    <view class="tab" @tap.capture="switchMode" data-mode='latest' :class="{'active':mode=='latest'}">
+        最新
+        <view></view>
+    </view>
+    <view class="tab" @tap.capture="switchMode" data-mode='liked' :class="{'active':mode=='liked'}">
+        喜欢
+        <view></view>
+    </view>
+    <view class="tab" @tap.capture="switchMode" data-mode='dailybest' :class="{'active':mode=='dailybest'}">
+        日榜
+        <view></view>
+    </view>
+</view>
+
+<view class="bottom" :class="{'active':showBtn}" wx:if="{{!notice}}">
+    <view class="btn" :class="{'camera':cameraBtn}" @longpress='pushImage' @tap='push'>
+        <text wx:if="{{!cameraBtn}}">有话要说</text>
+        <text class="emoji" wx:else>📷</text>
+    </view>
+</view>
+
+<view @touchstart='record' @touchend='switchCategory' class="list" wx:if="{{!notice}}">
+    <view class="state" wx:if='{{showhint}}'>
+        <rich-text nodes='{{state}}'></rich-text>
+        <image @tap='closeHint' class="close" src='../assets/close.jpg'></image>
+    </view>
+    <view class="item" wx:for="{{list}}" wx:key='{{item.id}}'>
+        <view class="image" wx:if='{{item.image}}'>
+            <view class="image-inner" @tap="showOriginal({{item.image}})">
+                <image mode='aspectFill' src='{{item.image}}'></image>
+            </view>
+        </view>
+        <text class="content">{{item.content}}</text>
+        <view class="control">
+            <view class="happybutton" @tap='deride({{index}})' :class="{'active':item.derided}">
+                <view></view>
+                <text>{{item.funny}}人觉得很欢乐</text>
+            </view>
+            <view class="right">
+                <view class="userinfo" wx:if="{{!item.anonymous}}">
+                    <image wx:if="{{item.avatarurl}}" src='{{item.avatarurl}}'></image>
+                    <image wx:else src='../assets/default.jpg'></image>
+                    <text>{{item.nickname}}</text>
+                </view>
+                <view class="userinfo" wx:else>
+                    <image src='../assets/default.jpg'></image>
+                    <text>匿名用户</text>
+                </view>
+                <view class="heart" @tap='toggoleLike({{index}})' :class="{'active':item.liked}">
+                    <view></view>
+                    <text>{{item.likecount}}</text>
+                </view>
+            </view>
+        </view>
+    </view>
+
+</view>
+
+</template>
+
+<script>
+
+import wafer from '../wafer/wafer'
+import wepy from 'wepy';
+import notice from '../components/notice';
+export default class extends wepy.page {
+    lastOffset = 0
+    timer = null
+    touchX = 0
+    config = {
+        navigationBarTitleText: '碎碎念',
+        enablePullDownRefresh: true
+    }
+
+    data = {
+        state: `
+      碎碎念是一个类似树洞的地方。你可以写一首诗，也可以随便说些想说的。但最多不能超过5行。<br>
+      在碎碎念上发布内容代表你已经阅读并同意隐私相关声明<br>（’我的’->’关于TODAY·今日’）
+      `,
+        showhint: false,
+        list: [],
+        mode: 'latest',
+        page: 0,
+        loaded: false,
+        notice: false,
+        noticeMode: 'lock',
+        cameraBtn: false,
+        showBtn: true
+    }
+
+    components = {
+        notice
+    }
+
+    methods = {
+        record(ev) {
+                let touch = ev.touches[0]
+                this.touchX = touch.clientX
+            },
+            switchCategory(ev) {
+                let endX = ev.changedTouches[0].clientX
+                let offset = endX - this.touchX
+                let modes = ['latest', 'liked', 'dailybest']
+                let curmodeIndex = modes.indexOf(this.mode)
+                switch (true) {
+                    case offset > 70:
+                        if (curmodeIndex > 0) {
+                          this.switchMode(null,modes[curmodeIndex-1])
+                        }
+                        break;
+                    case offset < -70:
+                        if (curmodeIndex < 2) {
+                          this.switchMode(null,modes[curmodeIndex+1])
+                        }
+                        break;
+                }
+            },
+            showOriginal(url) {
+                wx.previewImage({
+                    urls: [url]
+                })
+            },
+            async pushImage() {
+                this.cameraBtn = true
+                try {
+                    let {
+                        tempFilePaths: [path]
+                    } = await wepy.chooseImage({
+                        count: 1
+                    })
+                    wx.navigateTo({
+                        url: 'imgpush?path=' + path
+                    })
+                    this.cameraBtn = false
+                    this.$apply()
+                } catch (err) {
+                    this.cameraBtn = false
+                    this.$apply()
+                }
+            },
+            push() {
+                wx.navigateTo({
+                    url: 'push'
+                })
+            },
+            closeHint() {
+                wx.setStorageSync('ssnHint', false)
+                this.showhint = false
+            },
+            async toggoleLike(index) {
+                wx.showLoading({
+                    title: '保存操作',
+                    mask: true
+                })
+                try {
+                    let id = this.list[index].id
+                    if (this.list[index].liked) {
+                        await wafer.request('ssn/dislike?id=' + id)
+                        this.list[index].likecount--
+                    } else {
+                        await wafer.request('ssn/like?id=' + id)
+                        this.list[index].likecount++
+                    }
+                    this.list[index].liked = !this.list[index].liked
+                    this.$apply()
+                    wx.hideLoading()
+                } catch (e) {
+                    wx.showToast({
+                        title: '操作失败了..',
+                        icon: 'none',
+                        duration: 2000
+                    })
+                    console.log(e)
+                    wx.hideLoading()
+                }
+
+
+            },
+            deride(index) {
+                if (this.list[index].derided) return
+                this.list[index].derided = true
+                this.list[index].funny++
+                    wafer.request('ssn/deride?id=' + this.list[index].id, 'put')
+                this.$apply()
+            }
+    }
+
+    switchMode(ev, specifyMode) {
+        let mode
+        if (specifyMode) {
+          mode = specifyMode
+        } else {
+          mode = ev.target.dataset.mode
+        }
+
+        if (!mode || mode == this.mode) {
+            return
+        }
+        this.mode = mode
+        this.list = []
+        this.page = 0
+        this.loaded = false
+        this.$apply()
+        this.fetch()
+    }
+
+    async fetch() {
+        if (this.loaded) {
+            wx.showToast({
+                title: '已经全部加载了',
+                icon: 'none',
+                duration: 2000
+            })
+            return
+        }
+        try {
+            let url = ''
+            switch (this.mode) {
+                case 'latest':
+                    url = 'ssn/latest?page=' + this.page
+                    break;
+                case 'liked':
+                    url = 'ssn/liked?page=' + this.page
+                    break;
+                case 'dailybest':
+                    url = 'ssn/dailybest?page=' + this.page
+                    break;
+            }
+            let result = await wafer.request(url)
+            let sourceurl = this.$parent.globalData.sourceurl
+            result.forEach((item) => {
+                item.content = item.content.replace(/\n/g, " ")
+                if (item.avatarurl) {
+                    item.avatarurl = sourceurl + item.avatarurl
+                }
+                if (item.image) {
+                    item.image = sourceurl + item.image
+                }
+            })
+            this.page++
+                if (result.length < 60) {
+                    this.loaded = true
+                }
+            this.list = this.list.concat(result)
+            this.$apply()
+            wx.stopPullDownRefresh()
+        } catch (e) {
+            wx.stopPullDownRefresh()
+            console.log(e)
+            wx.showToast({
+                title: '加载出错了..',
+                icon: 'none',
+                duration: 2000
+            })
+        }
+
+    }
+
+    async onPullDownRefresh() {
+
+        this.list = []
+        this.page = 0
+        this.loaded = false
+        this.$apply()
+        this.fetch()
+    }
+
+    onShareAppMessage() {
+        return {}
+    }
+
+    onReachBottom() {
+        this.fetch()
+    }
+
+    events = {
+      agreed(){
+        this.notice = false
+        this.fetch()
+      }
+    }
+
+    onLoad() {
+        if (wx.getStorageSync('ssnHint') !== false) {
+            this.showhint = true
+        }
+        this.fetch()
+    }
+
+    onPageScroll(ev) {
+        if (this.timer) {
+            return
+        }
+        this.timer = setTimeout(() => {
+          switch(true){
+            case ev.scrollTop==0||ev.scrollTop<0:
+            case ev.scrollTop < this.lastOffset:
+              this.showBtn = true
+              break;
+            case ev.scrollTop > this.lastOffset:
+              this.showBtn = false
+              break;
+          }
+            this.lastOffset = ev.scrollTop
+            this.timer = null
+            this.$apply()
+        }, 200)
+    }
+
+    async onShow() {
+        this.notice = false;
+        let {
+            authSetting: {
+                'scope.userInfo': scope
+            }
+        } = await wepy.getSetting()
+        if (!scope) {
+            await wepy.getUserInfo({
+                withCredentials: true
+            }).catch((err) => {
+                this.notice = true;
+                this.$apply()
+            })
+        }
+    }
+}
+
+</script>

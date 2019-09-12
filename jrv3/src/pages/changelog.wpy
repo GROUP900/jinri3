@@ -1,0 +1,58 @@
+<template>
+<view class="wrap">
+  <view class="item" wx:for="{{changelogs}}" wx:key='{{item.id}}'>
+    <text class="title">{{item.title}}</text>
+    <rich-text class="detail" nodes='{{item.detail}}'></rich-text>
+  </view>
+</view>
+</template>
+
+<style lang='scss'>
+.wrap{
+  color:white;
+  width:100%;
+  padding:32rpx;
+}
+.item{
+  margin-bottom:32rpx;
+}
+.detail {
+  font-size:20rpx;
+  line-height: 40rpx;
+}
+.title {
+  font-size:28rpx;
+  line-height: 28rpx;
+  margin-bottom:10rpx;
+}
+</style>
+
+<script>
+
+import wepy from 'wepy';
+export default class extends wepy.page {
+
+    config = {
+      navigationBarTitleText:'更新记录'
+    }
+
+    data = {
+      changelogs:[]
+    }
+
+    methods = {
+
+    }
+
+    onLoad(){
+      wepy.request('common/changelogs').then(({data})=>{
+        data.forEach((item)=>{
+          item.detail = item.detail.replace(/\n/g, "<br>")
+        })
+        this.changelogs = data
+        this.$apply()
+      })
+    }
+}
+
+</script>

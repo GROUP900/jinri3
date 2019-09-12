@@ -1,0 +1,93 @@
+<template>
+<view class="wrap">
+  <view class="content">
+    <image src='https://jinri-1253542371.file.myqcloud.com/static/tutorial.jpg'></image>
+    <view class="desc">
+      <view>
+        <text class="title">轻点</text>
+        <text class="small">切换成壁纸</text>
+      </view>
+      <view>
+        <text class="title">长按</text>
+        <text class="small">保存到相册</text>
+      </view>
+      <view>
+        <text class="title">上滑动</text>
+        <text class="small">探索/收藏</text>
+      </view>
+      <view>
+        <text class="title">两侧拖动</text>
+        <text class="small">上一张/下一张</text>
+      </view>
+    </view>
+  </view>
+</view>
+</template>
+
+<style lang='scss'>
+.wrap {
+  color:white;
+  position:absolute;
+  width:100%;
+  height:100%;
+  .content{
+    padding:0 60rpx;
+    box-sizing: border-box;
+    width:100%;
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    .desc {
+      margin-bottom:32rpx;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      view {
+        text-align:center;
+        .small {
+          color:rgba(white,.75);
+          font-size:22rpx;
+        }
+        .title {
+          color:white;
+          margin-bottom:20rpx;
+          font-size:28rpx;
+          display:block;
+        }
+      }
+    }
+    image {
+      width:420rpx;
+      height:746rpx;
+      margin:0 auto;
+      display:block;
+      margin-bottom:60rpx;
+    }
+  }
+}
+</style>
+
+<script>
+
+import wepy from 'wepy';
+export default class extends wepy.page {
+
+    config = {
+      disableScroll: true,
+      navigationBarTitleText:'操作方式'
+    }
+
+    data = {
+
+    }
+
+    methods = {
+
+    }
+
+    onLoad(){
+
+    }
+}
+
+</script>

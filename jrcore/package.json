@@ -1,0 +1,31 @@
+{
+  "name": "jrcore",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cos-nodejs-sdk-v5": "^2.3.7",
+    "crypto-random-string": "^1.0.0",
+    "file-type": "^7.6.0",
+    "formidable": "^1.2.1",
+    "jsonwebtoken": "^8.2.0",
+    "kcors": "^2.2.1",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-compose": "^4.0.0",
+    "koa-jwt": "^3.3.0",
+    "koa-mount": "^3.0.0",
+    "koa-router": "^7.4.0",
+    "marked": "^0.3.17",
+    "md5": "^2.2.1",
+    "mysql2": "^1.5.2",
+    "read-chunk": "^2.1.0",
+    "shortid": "^2.2.8",
+    "wafer-node-sdk": "^1.2.0"
+  }
+}

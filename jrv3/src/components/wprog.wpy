@@ -1,0 +1,135 @@
+<style lang='scss'>
+
+.wtoast {
+    background: white;
+    padding: 0 36rpx;
+    height: 88rpx;
+    left: 50%;
+    margin-top: 36rpx;
+    transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    font-size: 28rpx;
+    color: #353535;
+    box-shadow: 0 1rpx 2rpx rgba(0, 0, 0, .3);
+    border-radius: 1000px;
+    z-index: 9999;
+    opacity: 0;
+    text {
+        padding-left: 28rpx;
+        flex-shrink: 0;
+    }
+}
+
+.propgress_container {
+    width: 26px;
+    height: 26px;
+}
+
+.progress_box {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.progress_bg,
+.progress_canvas {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+}
+
+</style>
+
+<template>
+
+<view class="wtoast" animation="{{initAnimation}}">
+    <view class="propgress_container">
+        <view class='progress_box'>
+            <canvas class="progress_bg" canvas-id="canvasProgressbg"> </canvas>
+            <canvas class="progress_canvas" canvas-id="canvasProgress"> </canvas>
+        </view>
+    </view>
+    <text>{{hint}}</text>
+</view>
+
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class extends wepy.component {
+    data = {
+        count: 0,
+        countTimer: null,
+        initAnimation: {}
+    }
+
+    props = {
+      hint: String,
+      duration: String
+    };
+
+    countInterval() {
+        this.countTimer = setInterval(() => {
+            if (this.data.count <= 60) {
+                this.drawCircle(this.data.count / (60 / 2))
+                this.data.count++;
+            } else {
+              this.$emit('confirm');
+              this.clearcanvas()
+            }
+        }, Math.floor(this.duration/60))
+    }
+
+    drawCircle(step) {
+        var context = wx.createCanvasContext('canvasProgress');
+        context.setLineWidth(3);
+        context.setStrokeStyle('#07A406');
+        context.setLineCap('round')
+        context.beginPath();
+        context.arc(12, 12, 10, -Math.PI / 2, step * Math.PI - Math.PI / 2, false);
+        context.stroke();
+        context.draw()
+    }
+
+    drawProgressbg() {
+        var ctx = wx.createCanvasContext('canvasProgressbg')
+        ctx.setLineWidth(3);
+        ctx.setStrokeStyle('#E0E0E0');
+        ctx.setLineCap('round')
+        ctx.beginPath();
+        ctx.arc(12, 12, 10, 0, 2 * Math.PI, false);
+        ctx.stroke();
+        ctx.draw();
+    }
+
+    clearcanvas(){
+      this.initAnimation = wx.createAnimation({timingFunction:'ease-in',duration:100}).opacity(0).step().export()
+      this.$apply();
+      clearInterval(this.countTimer);
+      this.data.count = 0
+      this.data.countTimer = null
+      wx.createCanvasContext('canvasProgress').draw()
+      wx.createCanvasContext('canvasProgressbg').draw()
+    }
+
+    show() {
+      this.initAnimation = wx.createAnimation({timingFunction:'ease-in',duration:200}).opacity(1).step().export()
+      this.$apply();
+      this.drawProgressbg()
+      this.countInterval()
+    }
+
+    cancel() {
+      if(this.data.count!=0){
+        this.clearcanvas()
+      }
+    }
+
+}
+
+</script>

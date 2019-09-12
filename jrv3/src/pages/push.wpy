@@ -1,0 +1,183 @@
+<style lang='scss'>
+
+.wrap {
+    margin-bottom: 32rpx;
+}
+
+.label {
+    margin: 30rpx 0 15rpx 30rpx;
+    color: rgba(white, .5);
+    font-size: 28rpx;
+    display: block;
+}
+
+.state {
+    color: white;
+    font-size: 20rpx;
+    padding: 0 32rpx 32rpx 32rpx;
+    box-sizing: border-box;
+    display: block;
+    line-height: 35rpx;
+}
+
+button {
+    margin: 0 40rpx;
+}
+
+.infopreview {
+    display: flex;
+    align-items: center;
+    padding: 32rpx;
+    box-sizing: border-box;
+    justify-content: space-between;
+    button {
+        margin: 0;
+        padding: 9rpx 12rpx;
+        line-height: 1;
+    }
+    .info {
+        display: flex;
+        align-items: center;
+        image {
+            height: 48rpx;
+            width: 48rpx;
+            margin-right: 20rpx;
+        }
+        text {
+            color: white;
+            font-size: 22rpx;
+        }
+    }
+}
+
+</style>
+
+<template>
+
+<view class="wrap">
+    <text class="label">你要说的话：</text>
+    <textarea @blur="update" auto-focus/>
+    <view class="infopreview">
+        <view wx:if='{{!anonymous}}' class="info">
+            <image wx:if='{{avatarurl}}' src='{{dispAvatarurl}}'></image>
+            <image wx:else src='../assets/default.jpg'></image>
+            <text>{{nickName}}</text>
+        </view>
+        <view wx:else class="info">
+            <image src='../assets/default.jpg'></image>
+            <text>匿名</text>
+        </view>
+        <button @tap='updateInfo' wx:if='{{!anonymous}}' size='mini' plain type='primary'>刷新微信头像</button>
+    </view>
+    <view class="group" wx:if='{{!keepAnonymous||!keepNoCopy}}'>
+        <view wx:if='{{!keepNoCopy}}' class="item">
+            <text class="desc">不用我说的话做今日文案</text>
+            <switch checked='{{noCopy}}' @change='toggleCopy' />
+        </view>
+        <view wx:if='{{!keepAnonymous}}' class="item">
+            <text class="desc">不显示我的昵称和头像</text>
+            <switch checked='{{anonymous}}' @change='toggleAnonymous' />
+        </view>
+    </view>
+    <rich-text wx:if='{{!keepAnonymous||!keepNoCopy}}' nodes='{{state}}' class="state">
+    </rich-text>
+    <button type='primary' disabled='{{disabled}}' @tap='submit'>发送</button>
+</view>
+
+</template>
+
+<script>
+
+import PushMixin from '../mixins/push';
+import wafer from '../wafer/wafer'
+import wepy from 'wepy';
+export default class extends wepy.page {
+
+    config = {
+        disableScroll: true,
+        navigationBarTitleText: '发布'
+    }
+
+    data = {
+        state: `
+      我们可能直接使用你说的话作为今日日签的文案，如果不希望授权给我们，请一定选中上方选项<br>
+      发布前请确认内容和设置，一旦发布在小程序内无法删除，只能联系今日客服进行删除。如造成损失，相关问题概不受理<br>
+      碎碎念有时需要经过人工审核才能发布，发布后请耐心等待。
+      `,
+        keepNoCopy: false,
+        keepAnonymous: false,
+        anonymous: false,
+        noCopy: false,
+        avatarurl: '',
+        nickName: '',
+        userid: '',
+        content: ''
+    }
+
+    mixins = [PushMixin];
+
+    computed = {
+        dispAvatarurl() {
+                let sourceurl = this.$parent.globalData.sourceurl
+                return sourceurl + this.avatarurl
+            },
+            disabled() {
+                return (this.content) ? false : true
+            }
+
+    }
+
+    methods = {
+        update(ev) {
+                this.content = ev.detail.value
+            },
+            async submit() {
+                wx.showLoading({
+                    title: '发布....',
+                    mask: true
+                })
+                try {
+                    let bundle = {
+                        content: this.content,
+                        anonymous: (this.anonymous) ? 1 : 0,
+                        nocopy: (this.noCopy) ? 1 : 0,
+                        uid: this.userid
+                    }
+                    await wafer.request('ssn', 'post', bundle)
+                    wx.hideLoading()
+                    wx.switchTab({
+                        url: 'ssn'
+                    })
+                } catch (e) {
+                    console.log(e)
+                    wx.showToast({
+                        title: '发布失败了..请重试',
+                        icon: 'none',
+                        duration: 2000
+                    })
+                    wx.hideLoading()
+                }
+
+            },
+            toggleCopy() {
+                this.noCopy = !this.noCopy
+            },
+            toggleAnonymous() {
+                this.anonymous = !this.anonymous
+            }
+    }
+
+    async onLoad() {
+        this.keepNoCopy = wx.getStorageSync('noCopy')
+        this.keepAnonymous = wx.getStorageSync('anonymous')
+        this.anonymous = !!this.keepAnonymous
+        this.noCopy = !!this.keepNoCopy
+        let user = await wafer.request('userinfo')
+        this.avatarurl = user.avatarurl
+        this.userid = user.id
+        this.nickName = user.nickname
+        this.$apply()
+    }
+}
+
+</script>

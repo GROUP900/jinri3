@@ -1,0 +1,53 @@
+<template>
+
+  <card :id='id' :fronturl='fronturl' :shareCount='shareCount' :curDate='curDate'/>
+
+</template>
+
+<script>
+
+import wepy from 'wepy';
+import card from '../components/card';
+export default class extends wepy.page {
+
+    config = {
+        disableScroll: true
+    }
+
+    data = {
+      id:'',
+      shareCount:'',
+      curDate:'',
+      fronturl:''
+    }
+
+    components = {
+        card
+    }
+
+    onShareAppMessage(){
+      return {
+        title: '今日 '+this.curDate,
+        path:'/pages/randomday?day='+this.curDate,
+        imageUrl:this.fronturl,
+        success:()=>{
+          if(this.id){
+            wepy.request({
+              url:'common/riqian/share?id='+this.id,
+              method:'put'
+            }).then(({data:{sharecount}})=>{
+              this.shareCount = sharecount
+              this.$apply()
+            })
+          }
+        }
+      }
+    }
+
+    onReady(){
+      this.$invoke('card','boot')
+    }
+
+}
+
+</script>

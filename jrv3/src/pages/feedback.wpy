@@ -1,0 +1,80 @@
+<template>
+<text>请在下方输入反馈内容，如有必要请留下联系方式</text>
+<textarea @blur="update" auto-focus/>
+<button type='primary' disabled='{{disabled}}' @tap='submit'>发送</button>
+</template>
+
+<style lang='scss'>
+text {
+  margin:30rpx 0 15rpx 32rpx;
+  color:rgba(white,.5);
+  font-size:20rpx;
+  display:block;
+}
+button{
+  margin:60rpx 40rpx 0 40rpx;
+}
+</style>
+
+<script>
+
+import wepy from 'wepy';
+export default class extends wepy.page {
+
+    config = {
+      disableScroll: true,
+      navigationBarTitleText:'反馈'
+    }
+
+    data = {
+      content:''
+    }
+
+    computed = {
+      disabled(){
+        return (this.content)? false:true
+      }
+    }
+
+    methods = {
+      update(ev){
+        this.content = ev.detail.value
+      },
+      async submit(){
+        let data = {
+          content:this.content
+        }
+        let {
+            authSetting: {
+                'scope.userInfo': scope
+            }
+        } = await wepy.getSetting()
+        if (scope) {
+          let {userInfo:{nickName}} = await wepy.getUserInfo()
+          if(nickName){
+            data.name = nickName
+          }
+        }
+        wepy.request({
+          url:'common/feedback',
+          method:'post',
+          data
+        }).then((res)=>{
+          wx.showToast({
+            title: '反馈被提交了',
+            icon: 'none',
+            duration: 2000,
+            success:()=>{
+              wx.navigateBack()
+            }
+          })
+        })
+      }
+    }
+
+    onLoad(){
+
+    }
+}
+
+</script>

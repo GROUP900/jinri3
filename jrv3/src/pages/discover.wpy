@@ -1,0 +1,458 @@
+<style lang='scss'>
+.wxParse-inline{
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.parsed{
+  color: black;
+  font-weight: normal;
+  box-sizing: border-box;
+  padding: 0 32rpx 32rpx 32rpx;
+}
+.wxParse-div{margin: 0;padding: 0;}
+.wxParse-h1{font-size:64rpx; margin:0 0 10px 0; }
+.wxParse-h2{font-size:48rpx; margin:0 0 10px 0; }
+.wxParse-h3{ font-size:36rpx;margin:0 0 10px 0; }
+.wxParse-h4{font-size:32rpx; margin:0 0 10px 0;}
+.wxParse-h5 {font-size:26rpx; margin:0 0 10px 0; }
+.wxParse-h6{font-size:24rpx; margin:0 0 10px 0; }
+
+.wxParse-h1, .wxParse-h2, .wxParse-h3, .wxParse-h4, .wxParse-h5, .wxParse-h6, .wxParse-b, .wxParse-strong  { font-weight: 500; }
+
+.wxParse-i{font-style:italic}
+
+.wxParse-strong,.wxParse-s{display: inline}
+.wxParse-a{
+    color: #42ca73;
+    font-weight: 500;
+}
+
+.wxParse-video{
+    text-align: center;
+    margin: 10px 0;
+}
+
+.wxParse-video-video{
+    width:100%;
+}
+
+.wxParse-p {
+  font-size: 26rpx;
+  line-height: 52rpx;
+  margin-bottom: 32rpx;
+}
+
+.wxParse-img{
+  width:100%;
+  height:auto;
+}
+
+.wxParse-blockquote {
+  background: #F6F6F6;
+  padding: 20rpx 32rpx;
+  margin:0 -32rpx 32rpx -32rpx;
+  .wxParse-p{
+    color: rgba(black,.75);
+    font-size: 26rpx;
+    line-height: 52rpx;
+    margin: 0;
+    padding:0;
+  }
+}
+
+.point {
+    background: rgba(black, .75);
+    border-radius: 8rpx;
+    color: white;
+    font-weight: 500;
+    font-size: 28rpx;
+    padding: 20rpx;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5000;
+}
+
+.outer {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.wrap {
+    height: 100%;
+    padding-top: 440rpx;
+    box-sizing: border-box;
+    position: relative;
+    .head {
+        .desc {
+            margin-left: 60rpx;
+            margin-top: -16rpx;
+            color: white;
+            .poem {
+                font-size: 22rpx;
+                letter-spacing: 12rpx;
+                line-height: 52rpx;
+                margin-bottom: 32rpx;
+                display: block;
+            }
+            .type {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                text {
+                    display: block;
+                    font-size: 20rpx;
+                }
+            }
+            .icon {
+                margin-right: 20rpx;
+                display: inline-block;
+                width: 54rpx;
+                height: 54rpx;
+                background-size: contain;
+                background-repeat: no-repeat;
+                &.audio {
+                    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTQiIGhlaWdodD0iNTQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTI3IDBDMTIuMDg3IDAgMCAxMi4wODkgMCAyN2MwIDE0LjkxIDEyLjA4OCAyNyAyNyAyNyAxNC45MSAwIDI3LTEyLjA5IDI3LTI3QzU0IDEyLjA4NyA0MS45MSAwIDI3IDB6bS0uMTI1IDM2LjcyOGExLjYwNyAxLjYwNyAwIDAgMS0yLjYgMS4yNjVsLTUuMjcxLTQuMTNjLS4yNDQuMDYtLjQ5OC4wOTctLjc2My4wOTdoLTUuMjgzYTMuMTM4IDMuMTM4IDAgMCAxLTMuMTM3LTMuMTM3di05LjE1YTMuMTM4IDMuMTM4IDAgMCAxIDMuMTM3LTMuMTM4aDUuMjg0Yy4zMDcgMCAuNjAyLjA0Ni44ODQuMTI4bDUuMTUtNC4wMzdhMS42MDggMS42MDggMCAwIDEgMi41OTkgMS4yNjV2MjAuODM3em01LjI3Ni02LjYwM2wtMS43NjItMS43NjJhMy4zNDUgMy4zNDUgMCAwIDAtLjEzLTQuMTI1bDEuNzQ4LTEuNzQ4YTUuODA0IDUuODA0IDAgMCAxIC4xNDQgNy42MzV6bTIuMjg0IDIuMjg1YTkuMDE4IDkuMDE4IDAgMCAwIDIuMy02LjAyMyA5LjAyIDkuMDIgMCAwIDAtMi40NDQtNi4xOGwxLjc0OC0xLjc1YTExLjQ4OCAxMS40ODggMCAwIDEgMy4xNyA3LjkzYzAgMi45OTItMS4xNDYgNS43MjItMy4wMjIgNy43NzRsLTEuNzUyLTEuNzUxem01Ljk1NCA1LjkwMWwtMS43NDgtMS43NDlhMTQuOTA3IDE0LjkwNyAwIDAgMCA0LjAwNS0xMC4xNzUgMTQuOTEgMTQuOTEgMCAwIDAtNC4xNTMtMTAuMzMxbDEuNzQ5LTEuNzQ5YzMuMDE3IDMuMTM4IDQuODc3IDcuMzk0IDQuODc3IDEyLjA4IDAgNC42MS0xLjggOC44MDMtNC43MyAxMS45MjR6IiBmaWxsLXJ1bGU9Im5vbnplcm8iIGZpbGw9IiNGRkYiLz48L3N2Zz4=);
+                }
+                &.video {
+                    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTQiIGhlaWdodD0iNTQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsPSIjRkZGIj48cGF0aCBkPSJNMjcgMEMxMi4wODcgMCAwIDEyLjA4OSAwIDI3YzAgMTQuOTEgMTIuMDg4IDI3IDI3IDI3IDE0LjkxIDAgMjctMTIuMDkgMjctMjdDNTQgMTIuMDg3IDQxLjkxIDAgMjcgMHptMTMuODUgNDAuMzI0YTIuODAyIDIuODAyIDAgMCAxLTIuODAxIDIuOEgxNS45NTJhMi44MDIgMi44MDIgMCAwIDEtMi44MDEtMi44VjEzLjU1OGEyLjgwMiAyLjgwMiAwIDAgMSAyLjgwMS0yLjgwMWgyMi4wOTdhMi44MDIgMi44MDIgMCAwIDEgMi44MDEgMi44MDF2MjYuNzY2eiIvPjxwYXRoIGQ9Ik0zMi45ODcgMjkuMDdIMjEuMDEzYy0uNzA1IDAtMS4yNzYuNTcyLTEuMjc2IDEuMjc2djcuNDNjMCAuNzA1LjU3MiAxLjI3NiAxLjI3NiAxLjI3NmgxMS45NzRjLjcwNSAwIDEuMjc2LS41NzIgMS4yNzYtMS4yNzd2LTcuNDI5YzAtLjcwNS0uNTctMS4yNzYtMS4yNzYtMS4yNzZ6TTE1LjI1OSAyMC4zMjhoMi40MTJ2Mi44MDFoLTIuNDEyek0xNS4yNTkgMTUuMDU2aDIuNDEydjIuODAxaC0yLjQxMnpNMTUuMjU5IDM2LjE0M2gyLjQxMnYyLjgwMWgtMi40MTJ6TTE1LjI1OSAzMC44NzFoMi40MTJ2Mi44MDFoLTIuNDEyek0xNS4yNTkgMjUuNTk5aDIuNDEyVjI4LjRoLTIuNDEyek0zMi45ODcgMTQuODMxSDIxLjAxM2MtLjcwNSAwLTEuMjc2LjU3Mi0xLjI3NiAxLjI3N3Y3LjQyOWMwIC43MDUuNTcyIDEuMjc2IDEuMjc2IDEuMjc2aDExLjk3NGMuNzA1IDAgMS4yNzYtLjU3MiAxLjI3Ni0xLjI3NnYtNy40M2MwLS43MDQtLjU3LTEuMjc2LTEuMjc2LTEuMjc2ek0zNi4zNDYgMTUuMDU2aDIuNDEydjIuODAxaC0yLjQxMnpNMzYuMzQ2IDM2LjE0M2gyLjQxMnYyLjgwMWgtMi40MTJ6TTM2LjM0NiAyMC4zMjhoMi40MTJ2Mi44MDFoLTIuNDEyek0zNi4zNDYgMzAuODcxaDIuNDEydjIuODAxaC0yLjQxMnpNMzYuMzQ2IDI1LjU5OWgyLjQxMlYyOC40aC0yLjQxMnoiLz48L2c+PC9zdmc+);
+                }
+                &.post {
+                    background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTQiIGhlaWdodD0iNTQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbC1ydWxlPSJub256ZXJvIiBmaWxsPSIjRkZGIj48cGF0aCBkPSJNMTUuNzk1IDMyLjQ4MmgxNi44MDZ2MS44NjdIMTUuNzk1ek0xNS43OTUgMjguMzRoMTYuODA2djEuODY3SDE1Ljc5NXpNMTUuNzk1IDI0LjE5OGgxNi44MDZ2MS44NjdIMTUuNzk1ek0xNS43OTUgMzYuODYzaDE2LjgwNnYxLjg2N0gxNS43OTV6Ii8+PHBhdGggZD0iTTI3IDBDMTIuMDg3IDAgMCAxMi4wODggMCAyN2MwIDE0LjkxIDEyLjA4OCAyNi45OTkgMjcgMjYuOTk5IDE0LjkxIDAgMjYuOTk5LTEyLjA4OCAyNi45OTktMjdDNTMuOTk5IDEyLjA5IDQxLjkxIDAgMjYuOTk5IDB6bTkuMjk1IDM4LjE1MnYzLjI4YTMuMjggMy4yOCAwIDAgMS0zLjI4IDMuMjhIMTUuMzgzYTMuMjggMy4yOCAwIDAgMS0zLjI4MS0zLjI4VjE3LjIzN2EzLjI4IDMuMjggMCAwIDEgMy4yOC0zLjI4aDE3LjYzNWEzLjI4IDMuMjggMCAwIDEgMy4yOCAzLjI4VjM4LjE1M3ptNC4yMDItNC4yMDJ2My4yNzlhMy4yODEgMy4yODEgMCAwIDEtMi4zMzQgMy4xNFYxNy4yMzhhNS4xNTMgNS4xNTMgMCAwIDAtNS4xNDctNS4xNDdIMTYuNDQzYTMuMjgxIDMuMjgxIDAgMCAxIDMuMTQtMi4zMzVoMTcuNjM1YTMuMjggMy4yOCAwIDAgMSAzLjI3OSAzLjI4VjMzLjk1eiIvPjxwYXRoIGQ9Ik0xNS43OTUgMjAuMDU1aDE2LjgwNnYxLjg2N0gxNS43OTV6Ii8+PC9nPjwvc3ZnPg==);
+                }
+            }
+        }
+        padding: 40rpx 60rpx;
+        box-sizing: border-box;
+        height: 440rpx;
+        background: black;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .image {
+            width: 200rpx;
+            image {
+                width: 100%;
+            }
+        }
+    }
+    .content {
+      &.post {
+        min-height: 100%;
+        background: white;
+        .desc {
+          width:100%;
+          padding:40rpx 32rpx;
+          box-sizing: border-box;
+          .author{font-size:22rpx;color:rgba(black,.5);margin-bottom:16rpx;display: block;}
+          .title{font-size:34rpx;font-weight:700;}
+        }
+      }
+        &.video {
+          height: 100%;
+          background: #222222;
+          .video{
+            width:100%;
+            position: relative;
+            .vwrap{
+              width:100%;
+              padding-bottom:56.2%;
+              position:relative;
+              video {
+                position: absolute;
+                width:100%;
+                height:100%;
+              }
+            }
+          }
+          .desc {
+              margin-top: 34rpx;
+              font-size: 28rpx;
+              text-align: center;
+              width:100%;
+              text {
+                  display: block;
+              }
+              .title {
+                  font-weight: 500;
+                  color: white;
+                  margin-bottom: 10px;
+              }
+              .author {
+                  color: rgba(white, .75);
+              }
+          }
+        }
+        &.audio {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            background: #222222;
+            .icon {
+                height: 100rpx;
+                width: 100rpx;
+                background-size: contain;
+                margin-top: 155rpx;
+                &.play {
+                    margin-right: -10rpx;
+                    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTguNjY3IDI5OC42NjciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMzIgMHYyOTguNjY3bDIzNC42NjctMTQ5LjMzNHoiLz48L3N2Zz4=);
+                }
+                &.pause {
+                    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTguNjY3IDI5OC42NjciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48ZyBmaWxsPSIjRkZGIj48cGF0aCBkPSJNMTkyIDBoODUuMzMzdjI5OC42NjdIMTkyek0yMS4zMzMgMGg4NS4zMzN2Mjk4LjY2N0gyMS4zMzN6Ii8+PC9nPjwvc3ZnPg==);
+                }
+                &.replay {
+                    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjYuNjY3IDQyNi42NjciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cGF0aCBkPSJNMjEzLjMzMyA4NS4zMzNWMEwxMDYuNjY3IDEwNi42NjdsMTA2LjY2NyAxMDYuNjY3VjEyOGM3MC43MiAwIDEyOCA1Ny4yOCAxMjggMTI4cy01Ny4yOCAxMjgtMTI4IDEyOC0xMjgtNTcuMjgtMTI4LTEyOEg0Mi42NjdjMCA5NC4yOTMgNzYuMzczIDE3MC42NjcgMTcwLjY2NyAxNzAuNjY3UzM4NCAzNTAuMjkzIDM4NCAyNTYgMzA3LjYyNyA4NS4zMzMgMjEzLjMzMyA4NS4zMzN6IiBmaWxsPSIjRkZGIi8+PC9zdmc+);
+                }
+            }
+            .desc {
+                margin-top: 185rpx;
+                font-size: 28rpx;
+                text-align: center;
+                text {
+                    display: block;
+                }
+                .title {
+                    font-weight: 500;
+                    color: white;
+                    margin-bottom: 10px;
+                }
+                .author {
+                    color: rgba(white, .75);
+                }
+            }
+            .hint {
+                bottom: 32rpx;
+                text-align: center;
+                position: absolute;
+                color: rgba(white, .3);
+                font-size: 20rpx;
+                text {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+</style>
+
+<template>
+
+<view wx:if="{{type=='audio' && touching}}" class="point">
+{{dispTime}}
+</view>
+<view class="outer">
+    <view class="wrap">
+        <view class="head">
+            <view class="image">
+                <image src='{{picture}}' mode="widthFix"></image>
+            </view>
+            <view class="desc">
+                <rich-text class="poem" nodes="{{poem}}"></rich-text>
+                <view class="type">
+                    <i class='icon {{type}}'></i>
+                    <view>
+                        <text>{{date}}</text>
+                        <text>{{dispType}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view @touchstart='record' @touchmove='moving' @touchend='changePoint' @touchcancel='changePoint' class="content audio" wx:if="{{type == 'audio'}}">
+            <view wx:if="{{audioStatu == 'paused'}}" @tap.stop='playaudio' class="icon play">
+            </view>
+            <view wx:if="{{audioStatu == 'playing'}}" @tap.stop='pauseaudio' class="icon pause">
+            </view>
+            <view wx:if="{{audioStatu == 'stoped'}}" @tap.stop='replayaudio' class="icon replay">
+            </view>
+            <view class="desc">
+                <text class="title">{{title}}</text>
+                <text class="author">{{author}}</text>
+            </view>
+            <view class="hint">
+                <text>今日使用的第三方音频来自网络，经过简单的剪切</text>
+                <text>请支持正版来获取完整音频</text>
+            </view>
+        </view>
+        <view class="content video" wx:if="{{type == 'video'}}">
+          <view class="video">
+            <view class="vwrap">
+              <video src='{{content}}'></video>
+            </view>
+          </view>
+          <view class="desc">
+              <text class="title">{{title}}</text>
+              <text class="author">{{author}}</text>
+          </view>
+        </view>
+        <view class="content post" wx:if="{{type == 'post'}}">
+          <view>
+            <view class="desc">
+              <text class="author">{{author}}</text>
+              <text class="title">{{title}}</text>
+            </view>
+            <import src="../wxParse/wxParse.wxml"/>
+            <view class="parsed">
+              <block wx:for="{{parsed.nodes}}" wx:key="{{index}}">
+                <template is="wxParse0" data="{{item}}"/>
+              </block>
+            </view>
+          </view>
+        </view>
+    </view>
+</view>
+
+</template>
+
+<script>
+let audioContext = wx.getBackgroundAudioManager()
+let drag = {
+  time:0,
+  positionX:0,
+  result:0,
+  duration:0
+}
+import wxParse from '../wxParse/wxParse';
+import wepy from 'wepy';
+export default class extends wepy.page {
+
+    config = {
+        navigationBarTitleText: '探索'
+    }
+    downloadedAudio=''
+    secondTominutes(second){
+      let minutes = Math.floor(second / 60);
+      let seconds = second - minutes * 60;
+      seconds = (String(seconds).length==1)?'0'+seconds:seconds;
+      return minutes+':'+seconds
+    }
+    startPlayMusic=(url)=>{
+      this.downloadedAudio = url
+      audioContext.onEnded(() => {
+          this.audioStatu = 'stoped'
+          this.$apply();
+      })
+      audioContext.onError((res) => {
+          console.log(res.errMsg)
+          console.log(res.errCode)
+      })
+      audioContext.title = this.title
+      audioContext.singer = this.author
+      audioContext.src = url
+      audioContext.play()
+    }
+    data = {
+        title: '',
+        author: '',
+        content: '',
+        type: '',
+        date: '',
+        picture: '',
+        poem: '',
+        audioStatu: 'playing',
+        touching: false,
+        parsed:{}
+    }
+
+    methods = {
+            record(ev) {
+              drag.time = Math.floor(audioContext.currentTime)
+              drag.positionX = ev.touches[0].clientX
+              drag.duration = Math.floor(audioContext.duration)
+            },
+            moving(ev) {
+              let curX = ev.changedTouches[0].clientX
+              let second = Math.floor((curX-drag.positionX)/2)
+              if(!this.touching&&(second>5||second<5)){
+                  this.touching = true
+              }
+              let result = drag.time+second
+              switch(true){
+                case result<0:result = 0;break
+                case result>drag.duration : result = drag.duration;break;
+              }
+              drag.result = result
+            },
+            changePoint() {
+              if(!this.touching) return
+              audioContext.seek(drag.result)
+              this.touching = false
+            },
+            replayaudio(){
+              this.startPlayMusic(this.downloadedAudio)
+              this.audioStatu = 'playing'
+            },
+            playaudio() {
+                this.audioStatu = 'playing'
+                audioContext.play()
+            },
+            pauseaudio() {
+                this.audioStatu = 'paused'
+                audioContext.pause()
+            }
+    }
+
+    computed = {
+      dispType(){
+        switch(this.type){
+          case 'audio':return'音频附件';break;
+          case 'video':return'视频附件';break;
+          case 'post':return'文字附件';break;
+        }
+      },
+        dispTime() {
+            let total = this.secondTominutes(drag.duration)
+            let cur = this.secondTominutes(drag.result)
+            return cur+' / '+total
+        }
+    }
+    onShareAppMessage() {
+        return {}
+    }
+    async onLoad() {
+        let sourceurl = this.$parent.globalData.sourceurl
+        await wepy.request('common/resource?id=' + this.$wxpage.options.id).then(({
+            data
+        }) => {
+            this.content = data.content
+            this.title = data.title
+            this.author = data.author
+            this.type = data.type
+            this.date = data.date.replace(/-/g, '/')
+            this.poem = data.poem.replace(/\n/g, "<br />")
+            this.picture = sourceurl + data.fronturl
+            this.$apply();
+        })
+        switch(this.type){
+          case 'post':
+            this.parsed = wxParse(this.content)
+            break;
+          case 'video':
+            this.content = sourceurl+this.content
+            break;
+          case 'audio':
+            try {
+                this.content = sourceurl+this.content
+                this.startPlayMusic(this.content)
+            } catch (e) {
+                wx.showToast({
+                    title: '资源加载错误',
+                    icon: 'none'
+                })
+                wx.hideLoading()
+            }
+          break;
+        }
+    }
+}
+
+</script>

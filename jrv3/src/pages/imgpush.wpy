@@ -1,0 +1,191 @@
+<style lang='scss'>
+.preview {
+  width:100%;
+  box-sizing: border-box;
+  padding:32rpx;
+  position: relative;
+}
+.preview-inner {
+  height:0;
+  overflow: hidden;
+  position: relative;
+  padding-bottom:100%;
+  width:100%;
+  image {
+    width:100%;
+    height:100%;
+    position:absolute;
+  }
+}
+.wrap {
+    padding-bottom: 32rpx;
+}
+
+.state {
+    color: white;
+    font-size: 20rpx;
+    padding: 0 32rpx 32rpx 32rpx;
+    box-sizing: border-box;
+    display: block;
+    line-height: 35rpx;
+}
+
+button {
+    margin: 0 40rpx;
+}
+
+.infopreview {
+    display: flex;
+    align-items: center;
+    padding: 32rpx;
+    box-sizing: border-box;
+    justify-content: space-between;
+    button {
+        margin: 0;
+        padding: 9rpx 12rpx;
+        line-height: 1;
+    }
+    .info {
+        display: flex;
+        align-items: center;
+        image {
+            height: 48rpx;
+            width: 48rpx;
+            margin-right: 20rpx;
+        }
+        text {
+            color: white;
+            font-size: 22rpx;
+        }
+    }
+}
+textarea{
+  background: black;
+  border:none;
+  font-size:34rpx;
+  padding:0 32rpx;
+  line-height:34rpx;
+  width:100%;
+}
+</style>
+
+<template>
+
+<view class="wrap">
+    <view class="preview">
+      <view class="preview-inner" @tap='showOriginal'>
+        <image mode='aspectFill' src='{{imgpath}}'></image>
+      </view>
+    </view>
+    <textarea placeholder='总得说点什么…' @blur="update" auto-height/>
+    <view class="infopreview">
+        <view wx:if='{{!anonymous}}' class="info">
+            <image wx:if='{{avatarurl}}' src='{{dispAvatarurl}}'></image>
+            <image wx:else src='../assets/default.jpg'></image>
+            <text>{{nickName}}</text>
+        </view>
+        <view wx:else class="info">
+            <image src='../assets/default.jpg'></image>
+            <text>匿名</text>
+        </view>
+        <button @tap='updateInfo' wx:if='{{!anonymous}}' size='mini' plain type='primary'>刷新微信头像</button>
+    </view>
+    <rich-text nodes='{{state}}' class="state"></rich-text>
+    <button type='primary' disabled='{{disabled}}' @tap='submit'>发送</button>
+</view>
+
+</template>
+
+<script>
+import PushMixin from '../mixins/push';
+import wafer from '../wafer/wafer'
+import wepy from 'wepy';
+export default class extends wepy.page {
+
+    config = {
+        navigationBarTitleText: '发布'
+    }
+
+    data = {
+      state: `
+    带有图片的碎碎念不能匿名发布<br>
+    麻烦不要发无意义的小表情图片...会被当垃圾删掉的<br>
+    在列表中图片显示为正方形，点击会显示原图
+    `,
+        avatarurl: '',
+        nickName: '',
+        userid: '',
+        content:'',
+        imgpath:''
+    }
+
+    mixins = [PushMixin];
+
+    computed = {
+        dispAvatarurl() {
+            let sourceurl = this.$parent.globalData.sourceurl
+            return sourceurl + this.avatarurl
+        },
+        disabled(){
+          return (this.content)? false:true
+        }
+    }
+
+    methods = {
+      showOriginal(){
+        wx.previewImage({
+          urls: [this.imgpath]
+        })
+      },
+      update(ev){
+        this.content = ev.detail.value
+      },
+      async submit(){
+        wx.showLoading({
+            title: '发布....',
+            mask: true
+        })
+        try{
+          let {data} = await wepy.uploadFile({
+              url: 'wx/uploadimage',
+              filePath: this.imgpath,
+              name: 'file',
+              formData:{
+                dir: 'ssn'
+              }
+          })
+          let uploadedImage = JSON.parse(data).data
+          let bundle = {
+            content:this.content,
+            uid:this.userid,
+            image:uploadedImage
+          }
+          await wafer.request('ssn', 'post', bundle)
+          wx.hideLoading()
+          wx.switchTab({
+              url: 'ssn'
+          })
+        }catch(e){
+          console.log(e)
+          wx.showToast({
+              title: '发布失败了..请重试',
+              icon: 'none',
+              duration: 2000
+          })
+          wx.hideLoading()
+        }
+
+      }
+    }
+
+    async onLoad() {
+        this.imgpath = this.$wxpage.options.path
+        let user = await wafer.request('userinfo')
+        this.avatarurl = user.avatarurl
+        this.userid = user.id
+        this.nickName = user.nickname
+        this.$apply()
+    }
+}
+
+</script>
